@@ -16,14 +16,14 @@ const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
 //
 var args = minimist(process.argv.slice(2), {
     string: [ 'from', 'to' ],
-    boolean: [ 'version', 'help' ],
-    alias: { h: 'help', v: 'version', f: 'from', t: 'to' },
+    boolean: [ 'verbose', 'help' ],
+    alias: { h: 'help', v: 'verbose', f: 'from', t: 'to' },
     default: { from: conf.defaultFromLang, to: conf.defaultToLangs },
 })
 
 
 // -- show version
-if (args.version) {
+if (process.argv.includes('-V') || process.argv.includes('--version')) {
     console.log(conf.version);
     process.exit(0);
 }
@@ -47,12 +47,14 @@ if (toLangs.includes(fromLang)) {
     process.exit(0);
 }
 
+const verbose = args.verbose;
+
+// -- flag for printResult
 let multiTrans = false;
 
 if (toLangs.length > 1) {
     multiTrans = true;
 }
-
 
 
 const toTranslate = args._[0];
@@ -65,9 +67,12 @@ let didYouMeanCheck = true;
 //
 // -- run ---------------------------------------------------------------------
 //
-// console.log('');
-// console.log("translating : " + toTranslate);
-// console.log('');
+if (verbose) {
+    console.log('');
+    console.log("translating : " + toTranslate + " from '" + fromLang + "' to '" + toLangs + "'");
+    console.log('');
+}
+
 
 let checkTranslation = '';
 let reverseTranslation = '';
@@ -77,7 +82,7 @@ translate(toTranslate, fromLang, toLangs[0])
         checkTranslation = result.text;
     })
     .then(() => {
-        translate(checkTranslation, toLangs[0], fromLang).then((result) => {
+        return translate(checkTranslation, toLangs[0], fromLang).then((result) => {
 
             reverseTranslation = result.text;
 
@@ -90,7 +95,6 @@ translate(toTranslate, fromLang, toLangs[0])
                 console.log('');
             }
         })
-        return Promise.resolve(1);
     })
     .then(() => {
         const translations = [];
@@ -120,8 +124,10 @@ function printResult(results) {
 }
 
 function printDone() {
-    // console.log('');
-    // console.log("done");
+    if (verbose) {
+        console.log('');
+        console.log("done");
+    }
 }
 
 function translate(string, fromLang, toLang) {
@@ -147,7 +153,6 @@ function translate(string, fromLang, toLang) {
     })
 }
 
-
 function showHelp() {
     console.log(`
     Usage: ` + path.basename(process.argv[1]) + ` [OPTIONS] string_to_translate
@@ -157,7 +162,8 @@ function showHelp() {
       -f, --from        language of input string (default : ` + conf.defaultFromLang + `)
       -t, --to          languages to translate to (default : ` + conf.defaultToLangs + `)
       -h, --help        show help
-      -v, --version     show version
+      -v, --verbose
+      -V, --version     show version
 
     Examples:
 
