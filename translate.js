@@ -1,19 +1,46 @@
 #! /usr/bin/env node
 
+const path = require('path');
+const minimist = require('minimist');
 const googleTranslateApi = require('google-translate-api');
 
-// const toTranslate = "comment vas-tu aujourd'hui?";
+//
+// -- handle options ----------------------------------------------------------
+//
+var args = minimist(process.argv.slice(2), {
+  string: [ 'from', 'to' ],
+  boolean: [ 'version', 'help' ],
+  alias: { h: 'help', v: 'version', f: 'from', t: 'to' },
+  default: { from: 'fr', to: 'en' },
+})
 
-const langs = ["it", "en", "de"];
+
+// -- show help
+if (args.help) {
+    showHelp();
+    process.exit(0);
+}
+
+// -- check if we have a string to translate
+if (!args._.length) {
+    console.log("  missing string to translate");
+    process.exit(0);
+}
+
+
+
+
+
+
+
+
+const langs = args.to.split(',');
+
+console.log(langs);
 
 let didYouMeanCheck = true;
 
-if (!process.argv[2]) {
-    console.log("  missing argument");
-    return;
-}
-
-const toTranslate = process.argv[2];
+const toTranslate = args._;
 
 function translate(string, fromLang, toLang) {
 
@@ -39,6 +66,13 @@ function translate(string, fromLang, toLang) {
     })
 }
 
+
+
+
+
+
+
+
 const printResult = (results) => {
     results.forEach(function(result) {
         console.log("  " + result.lang + " : " + result.text);
@@ -62,6 +96,7 @@ function main() {
     translate(toTranslate, 'fr', 'en')
         .then((result) => {
             checkTranslation = result.text;
+            console.log("DEBUG : checkTranslation -> " + checkTranslation);
         })
         .catch((error) => {
             console.error(error);
@@ -70,6 +105,7 @@ function main() {
             translate(checkTranslation, 'en', 'fr').then((result) => {
 
                 reverseTranslation = result.text;
+                console.log("reverseTranslation " + reverseTranslation);
 
                 if (toTranslate.toLowerCase() !== reverseTranslation.toLowerCase()) {
                     console.log('');
@@ -96,3 +132,17 @@ function main() {
 }
 
 main();
+
+
+function showHelp() {
+    console.log(`
+    usage: ` + path.basename(process.argv[1]) + ` [OPTIONS] string_to_translate
+
+    options:
+
+      -f, --from        language of input string
+      -t, --to          languages to translate to
+      -h, --help        show help
+      -v, --version     show version
+`);
+}
