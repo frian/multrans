@@ -1,45 +1,38 @@
 #! /usr/bin/env node
 
+/*jshint esversion: 6 */
+
 const conf = {
     "defaultFromLang": 'fr',    // en|fr|de|...
     "defaultToLangs" : 'it,en',    // de|en|fr,de|fr,de,it
-    "version": 'v1.0.0'
 };
 
+
 const path = require('path');
-const minimist = require('minimist');
+const args = require('commander');
 const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
 
-
-//
-// -- handle options ----------------------------------------------------------
-//
-var args = minimist(process.argv.slice(2), {
-    string: [ 'from', 'to' ],
-    boolean: [ 'verbose', 'help' ],
-    alias: { h: 'help', v: 'verbose', f: 'from', t: 'to' },
-    default: { from: conf.defaultFromLang, to: conf.defaultToLangs },
-})
+const version = require('./package.json').version;
 
 
-// -- show version
-if (process.argv.includes('-V') || process.argv.includes('--version')) {
-    console.log(conf.version);
-    process.exit(0);
+args
+    .usage('[options] string_to_translate')
+    .description('translate to one or more languages')
+    .option('-f, --from <lang>', 'language of input string', conf.defaultFromLang)
+    .option('-t, --to <lang>', 'languages to translate to', conf.defaultToLangs)
+    .option('-v, --verbose')
+    .version(version)
+    .parse(process.argv);
+
+
+if (! args.args.length) {
+  args.help();
 }
-
-
-// -- show help
-if (args.help || !args._.length) {
-    showHelp();
-    process.exit(0);
-}
-
-
 
 const fromLang = args.from || conf.defaultFromLang;
 
 const toLangs = args.to.split(',') || conf.defaultToLangs.split(',');
+
 
 // -- check if we have a same language in --from and --to
 if (toLangs.includes(fromLang)) {
@@ -57,7 +50,7 @@ if (toLangs.length > 1) {
 }
 
 
-const toTranslate = args._[0];
+const toTranslate = args.args[0];
 
 
 // -- flag ; we want ro check this only once
@@ -94,7 +87,7 @@ translate(toTranslate, fromLang, toLangs[0])
                 console.log("    reverse translation : " + reverseTranslation);
                 console.log('');
             }
-        })
+        });
     })
     .then(() => {
         const translations = [];
@@ -148,26 +141,7 @@ function translate(string, fromLang, toLang) {
                 resolve({text: res.text, lang: toLang});
             }
         ).catch(err => {
-            reject(err)
+            reject(err);
         });
-    })
-}
-
-function showHelp() {
-    console.log(`
-    Usage: ` + path.basename(process.argv[1]) + ` [OPTIONS] string_to_translate
-
-    Options:
-
-      -f, --from        language of input string (default : ` + conf.defaultFromLang + `)
-      -t, --to          languages to translate to (default : ` + conf.defaultToLangs + `)
-      -h, --help        show help
-      -v, --verbose
-      -V, --version     show version
-
-    Examples:
-
-      ` + path.basename(process.argv[1]) + ` string_to_translate
-
-`);
+    });
 }
