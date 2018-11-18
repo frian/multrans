@@ -1,15 +1,22 @@
 {
-  "name": "translate",
-  "version": "1.0.0",
-  "description": "command line translation",
-  "main": "translate.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "author": "a@frian.org",
-  "license": "ISC",
-  "dependencies": {
-    "@k3rn31p4nic/google-translate-api": "^1.0.5",
-    "commander": "^2.19.0"
-  }
+    "name": "multrans",
+    "version": "1.0.0",
+    "description": "command line translation to one or multiple languages",
+    "keywords": [
+        "translate",
+        "translation",
+        "node",
+        "multiple languages"
+    ],
+    "main": "multrans.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/frian/multrans"
+    },
+    "author": "a@frian.org",
+    "license": "ISC",
+    "dependencies": {
+        "@k3rn31p4nic/google-translate-api": "^1.0.5",
+        "commander": "^2.19.0"
+    }
 }
