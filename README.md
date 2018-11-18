@@ -1,6 +1,6 @@
 # multrans
 
-a node.js script to translate to one or more languages
+a node.js script to translate to one or more languages.
 
 ## Usage
 
@@ -43,7 +43,9 @@ Examples:
 
 ## Setup
 
-clone or download
+clone or download.
+
+run npm install.
 
 ## License
 
