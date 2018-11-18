@@ -3,7 +3,7 @@
 /*jshint esversion: 6 */
 
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 const program = require('commander');
 const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
 
@@ -43,6 +43,20 @@ program
             fs.writeFileSync('config.json', newConf);
             process.exit(0);
         }
+    })
+    .on('--help', function(){
+      console.log('');
+      console.log('Examples:');
+      console.log('  $ ' + program._name + ' set             show defaults');
+      console.log('  $ ' + program._name + ' set -i fr       set input lang to fr');
+      console.log('  $ ' + program._name + ' set -o es,de    set output langs to es and de');
+    });
+
+    program.on('--help', function(){
+      console.log('');
+      console.log('Examples:');
+      console.log('  $ ' + program._name + ' "I am a translator"');
+      console.log('  $ ' + program._name + ' -f en -t fr,it,de,es,ru "I can translate in multiple languages"');
     });
 
 program
