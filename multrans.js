@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-
 /*jshint esversion: 6 */
 
 const fs = require('fs');
@@ -8,12 +7,15 @@ const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
 const multrans = require('./multranslib.js');
 const conf = require('./config');
 
+// -- Commander parsed argv
 const program = multrans.parseArgs(conf);
 
+// -- show help when no param or command
 if (! program.args.length) {
   program.help();
 }
 
+// -- consts from command line
 const verbose = program.verbose;
 const toTranslate = program.args[0];
 const fromLang = program.from || conf.defaultFromLang;
@@ -39,7 +41,6 @@ let didYouMeanCheck = true;
 let checkTranslation = '';
 let reverseTranslation = '';
 
-
 //
 // -- run ---------------------------------------------------------------------
 //
@@ -48,7 +49,6 @@ if (verbose) {
     console.log("translating : " + toTranslate + " from '" + fromLang + "' to '" + toLangs + "'");
     console.log('');
 }
-
 
 multrans.translate(toTranslate, fromLang, toLangs[0])
     .then((result) => {
