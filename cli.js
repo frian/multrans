@@ -2,9 +2,7 @@
 /*jshint esversion: 6 */
 
 const fs = require('fs');
-const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
-
-const multrans = require('./multranslib.js');
+const multrans = require('./index');
 const conf = require('./config');
 
 // -- Commander parsed argv
