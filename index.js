@@ -2,8 +2,13 @@
 
 const program = require('commander');
 const googleTranslateApi = require('@k3rn31p4nic/google-translate-api');
+const he = require('he');
 
 const version = require('./package.json').version;
+
+// -- flag ; we want ro check this only once
+let didYouMeanCheck = true;
+
 
 const multrans = {
     printDone: function(verbose) {
@@ -24,7 +29,7 @@ const multrans = {
                 ).then(res => {
                     if (res.from.text.didYouMean && didYouMeanCheck === true) {
                         didYouMeanCheck = false;
-                        console.log("  Did you mean  : " + res.from.text.value);
+                        console.log("  Did you mean  : " + he.decode(res.from.text.value));
                         console.log('');
                     }
                     resolve({text: res.text, lang: toLang, multiTrans: multiTrans});

@@ -8,7 +8,7 @@
         "node",
         "multiple languages"
     ],
-    "main": "index.js",
+    "main": "./index.js",
     "bin": {
         "multrans": "./cli.js"
     },
@@ -20,6 +20,7 @@
     "license": "MIT",
     "dependencies": {
         "@k3rn31p4nic/google-translate-api": "^1.0.5",
-        "commander": "^2.19.0"
+        "commander": "^2.19.0",
+        "he": "^1.2.0"
     }
 }

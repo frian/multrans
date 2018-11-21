@@ -32,9 +32,6 @@ if (toLangs.length > 1) {
     multiTrans = true;
 }
 
-// -- flag ; we want ro check this only once
-let didYouMeanCheck = true;
-
 // -- for translation check
 let checkTranslation = '';
 let reverseTranslation = '';
